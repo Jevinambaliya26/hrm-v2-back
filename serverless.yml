@@ -1,0 +1,162 @@
+service: ${file(./secret.json):ApiName}
+provider:
+    name: aws
+    runtime: nodejs14.x
+    region: ${file(./secret.json):DefaultRegion}
+    stage: prod-erm
+
+functions:
+  
+    #-------------------------------------------------------------------------
+
+    ######################################################### below are examples
+
+    bye: #This Is an example
+        handler: src/middleware/test_res.bye
+        events:
+            - http:
+                  path: /byea
+                  method: get
+        cors: true
+        origin: "*"
+
+    hello: #This Is an example
+        handler: src/middleware/test_res.hello
+        # vpc:
+        #   securityGroupIds:
+        #     - Fn::GetAtt: ServerlessVPC.DefaultSecurityGroup
+        #   subnetIds:
+        #     - Ref: ServerlessSubnetA
+        events:
+            - http:
+                  path: /hello
+                  method: get
+        cors: true
+        origin: "*"
+
+    crud: #This Is an example
+        handler: src/middleware/test_query.query
+        # vpc:
+        #   securityGroupIds:
+        #     - Fn::GetAtt: ServerlessVPC.DefaultSecurityGroup
+        #   subnetIds:
+        #     - Ref: ServerlessSubnetA
+        events:
+            - http:
+                  path: /query
+                  method: post
+        cors: true
+        origin: "*"
+        headers: "*"
+
+    # {POST} /api/login request
+    # {
+    #   email: "",
+    #   password: ""
+    # }
+    login:
+        handler: src/middleware/auth.login
+        events:
+            - http:
+                  path: /api/login
+                  method: post
+        cors: true
+        origin: "*"
+
+    # {GET} employee permissions from module_permission_master and module_permission_master
+    # Headers: Authorization = token
+    getEmployeePermission:
+        handler: src/middleware/employee.getEmployeePermission
+        events:
+            - http:
+                  path: /api/employeePermission
+                  method: get
+        cors: true
+        origin: "*"
+
+    # {GET} employee data from employee table
+    # Headers: Authorization = token
+    getEmployee:
+        handler: src/middleware/employee.getEmployee
+        events:
+            - http:
+                  path: /api/user
+                  method: get
+        cors: true
+        origin: "*"
+
+    createEmployee:
+        handler: src/middleware/employee.createEmployee
+        events:
+            - http:
+                  path: /employee/create/v1
+                  method: post
+        cors: true
+        origin: "*"
+    
+    getEmployeeList:
+        handler: src/middleware/employee.getEmployeeList
+        events:
+            - http:
+                path: /employee/list/v1
+                method: get
+        cors: true
+        origin: "*"
+    
+    getEmployeeEditData:
+        handler: src/middleware/employee.getEmployeeEditData
+        events:
+            - http:
+                path: /employee/edit/{id}/v1
+                method: get
+        cors: true
+        origin: "*"
+    
+    deleteEmployeeData:
+        handler: src/middleware/employee.deleteEmployeeData
+        events:
+            - http:
+                path: /employee/delete/{id}/v1
+                method: delete
+        cors: true
+        origin: "*"
+
+    getModuleMasterData:
+        handler: src/middleware/moduleMaster.getModuleMasterData
+        events:
+            - http:
+                path: /module/master/v1
+                method: get
+        cors: true
+        origin: "*"
+    
+    getCompanyMasterData:
+        handler: src/middleware/companyMaster.getCompanyMasterData
+        events:
+            - http:
+                path: /company/master/v1
+                method: get
+        cors: true
+        origin: "*"
+    
+    getDepartmentMasterData:
+        handler: src/middleware/departmentMaster.getDepartmentMasterData
+        events:
+            - http:
+                path: /department/master/{company_id}/v1
+                method: get
+        cors: true
+        origin: "*"
+
+    getDesignationMasterData:
+        handler: src/middleware/designationMaster.getDesignationMasterData
+        events:
+            - http:
+                path: /designation/master/{department_id}/v1
+                method: get
+        cors: true
+        origin: "*"
+
+plugins:
+    - serverless-offline
+    - serverless-pseudo-parameters
